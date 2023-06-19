@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux';
 import io from 'socket.io-client';
 import socket from '../store/socket';
 
 
 
 const Chat = () => {
+    const { user, loading,socketId } = useSelector(state => state.userReducer);
     let [inputValue, setInputValue] = useState('');
     let [messages, setMessages] = useState([]);
     let socketRef = useRef(socket);
     
-
 
     useEffect(() => {
         socketRef.current.on('chatmessage', (data) => {
@@ -23,7 +24,12 @@ const Chat = () => {
     }, []);
 
     const send = () => {
-        socketRef.current.emit('chat', inputValue);
+
+        let socketMessage={
+            id:socketId,
+            message:inputValue
+        }
+        socketRef.current.emit('chat', socketMessage);
         setInputValue('');
     };
     const handleChange = (event) => {   
@@ -35,6 +41,7 @@ const Chat = () => {
             <div>
                 <label htmlFor="message">Message</label>
                 <input type="text" name="" id="message" value={inputValue} onChange={handleChange} />
+                <input type="text" style={{display:"none"}} />
                 {/* <input type="submit" value="send" onClick={send}/> */}
                 <button onClick={send}>send</button>
 

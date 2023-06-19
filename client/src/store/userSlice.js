@@ -7,7 +7,8 @@ const initialState = {
     users: [],
     loading: true,
     error: {},
-    user: {}
+    user: {},
+    socketId:''
 }
 
 
@@ -38,6 +39,10 @@ export const loginUsers = createAsyncThunk(
 );
 export const logout = createAsyncThunk("user/logout", async () => {  
     return {};
+  });
+  export const setSocket = createAsyncThunk("user/socket", async (data) => {  
+    console.log(data)
+    return data;
   });
 const userSlice = createSlice({
     name: 'userSlice',
@@ -85,6 +90,21 @@ const userSlice = createSlice({
         },
         [logout.fulfilled]: (state, { payload }) => {
             state.user = payload;
+            state.loading = false
+            state.error = null
+        },
+        [setSocket.pending]: (state) => {
+            state.loading = true
+            state.socketId = ''
+            state.error = null
+        },
+        [setSocket.rejected]: (state, { payload }) => {
+            state.loading = false
+            state.socketId = ''
+            state.error = payload;
+        },
+        [setSocket.fulfilled]: (state, { payload }) => {
+            state.socketId = payload;
             state.loading = false
             state.error = null
         }

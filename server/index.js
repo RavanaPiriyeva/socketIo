@@ -8,7 +8,7 @@ const { createServer } = require("http");
 const httpServer = createServer(app);
 
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
@@ -30,8 +30,8 @@ const io = new Server(httpServer, {
 
 io.on("connection", (socket) => {
     console.log("socket id" , socket.id)
-    socket.on("chat", (msg) => {
-        io.emit("chatmessage", msg);
+    socket.on("chat", (data) => {
+        io.to(data.id).emit("chatmessage", data.message);
     });
 });
 

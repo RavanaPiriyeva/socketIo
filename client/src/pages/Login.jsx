@@ -21,6 +21,7 @@ const Login = () => {
 
         },
         onSubmit:async  (values) => {
+            console.log(values)
             values.socketId = socket.id;
             dispatch(loginUsers(values))
             dispatch(getUsers())
